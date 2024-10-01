@@ -152,7 +152,7 @@ class ServerRequestHandler:
             if not self.active_runs and self.session and not self.session.closed:
                 await self.session.close()
 
-    async def single_request(self, method: str, params=None) -> dict:
+    async def single_request(self, method: str, params=None, headers=None) -> dict:
         """Делает единичный запрос к серверу,
         с повторными попытками при необходимости."""
 
@@ -163,7 +163,7 @@ class ServerRequestHandler:
         while True:
 
             try:
-                result = await self.request_attempt(method.strip().lower(), params)
+                result = await self.request_attempt(method.strip().lower(), params, headers=headers)
                 self.success()
                 return result
 
@@ -175,7 +175,7 @@ class ServerRequestHandler:
 
             # all other exceptions will propagate
 
-    async def request_attempt(self, method, params=None) -> dict:
+    async def request_attempt(self, method, params=None, headers=None) -> dict:
         """Делает попытку запроса к серверу, ожидая при необходимости."""
 
         try:
@@ -187,7 +187,8 @@ class ServerRequestHandler:
                     params_with_auth["auth"] = self.token
 
                 async with self.session.post(
-                    url=self.webhook + method, json=params_with_auth, ssl=self.ssl
+                    url=self.webhook + method, json=params_with_auth,
+                    ssl=self.ssl, headers=headers
                 ) as response:
                     json = await response.json(encoding="utf-8")
 
