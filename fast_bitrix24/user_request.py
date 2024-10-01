@@ -43,7 +43,7 @@ class UserRequestAbstract:
         method: str,
         params: Union[Dict[str, Any], None] = None,
         mute=False,
-        headers: dict = None,
+        headers: Union[Dict[str, Any], None] = None,
     ):
         self.bitrix = bitrix
         self.srh: ServerRequestHandler = bitrix.srh
