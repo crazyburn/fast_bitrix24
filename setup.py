@@ -1,5 +1,4 @@
 import setuptools
-from fast_bitrix24.__version__ import __version__
 
 with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
@@ -9,7 +8,7 @@ with open('requirements.txt', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name="fast_bitrix24",
-    version=__version__,
+    version="1.8.0f",
     author="Alexey Leshchenko",
     author_email="leshchenko@gmail.com",
     description='API wrapper для быстрого получения данных от Битрикс24 через '
@@ -29,12 +28,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.7',
-    install_requires=[
-        "aiohttp",
-        "tqdm",
-        "more_itertools",
-        "icontract",
-        "beartype>=0.10.0"
-    ],
+    install_requires=requirements,
     license="MIT"
 )
