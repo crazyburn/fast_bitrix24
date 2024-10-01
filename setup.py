@@ -29,6 +29,12 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.7',
-    install_requires=requirements,
+    install_requires=[
+        "aiohttp",
+        "tqdm",
+        "more_itertools",
+        "icontract",
+        "beartype>=0.10.0"
+    ],
     license="MIT"
 )
