@@ -60,6 +60,7 @@ class ServerRequestHandler:
         operating_time_limit: int,
         client,
         ssl: bool = True,
+        headers: dict = None
     ):
         self.webhook = self.standardize_webhook(webhook)
 
@@ -81,6 +82,7 @@ class ServerRequestHandler:
         self.client_provided_by_user = bool(client)
         self.session = client
         self.ssl = ssl
+        self.headers = headers
 
         # лимит количества одновременных запросов,
         # установленный конструктором или пользователем
@@ -141,7 +143,8 @@ class ServerRequestHandler:
             return
 
         if not self.active_runs and (not self.session or self.session.closed):
-            self.session = aiohttp.ClientSession(raise_for_status=True)
+            self.session = aiohttp.ClientSession(
+                raise_for_status=True, headers=self.headers)
         self.active_runs += 1
 
         try:

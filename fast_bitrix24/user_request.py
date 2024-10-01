@@ -43,9 +43,12 @@ class UserRequestAbstract:
         method: str,
         params: Union[Dict[str, Any], None] = None,
         mute=False,
+        headers: dict = None,
     ):
         self.bitrix = bitrix
         self.srh: ServerRequestHandler = bitrix.srh
+
+        self.headers = headers
 
         self.method = method
         self.st_method = self.standardized_method(method)
@@ -119,7 +122,8 @@ class UserRequestAbstract:
         raise NotImplementedError
 
     async def run(self):
-        response = await self.srh.single_request(self.method, self.params)
+        response = await self.srh.single_request(
+            self.method, self.params, headers=self.headers)
         return ServerResponseParser(response).extract_results()
 
 
@@ -202,7 +206,8 @@ class GetAllUserRequest(UserRequestAbstract):
 
     async def make_first_request(self):
         self.first_response = ServerResponseParser(
-            await self.srh.single_request(self.method, self.params)
+            await self.srh.single_request(
+                self.method, self.params, headers=self.headers)
         )
         self.total = self.first_response.total
         self.results = self.first_response.extract_results()
@@ -368,13 +373,15 @@ class RawCallUserRequest:
     """
 
     @beartype
-    def __init__(self, bitrix, method: str, item):
+    def __init__(self, bitrix, method: str, item, headers=None):
         self.srh = bitrix.srh
         self.method = method
         self.item = item
+        self.headers = headers
 
     async def run(self):
-        return await self.srh.single_request(self.method, self.item)
+        return await self.srh.single_request(
+            self.method, self.item, headers=self.headers)
 
 
 class ListAndGetUserRequest:

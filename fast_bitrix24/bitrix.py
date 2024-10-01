@@ -39,6 +39,7 @@ class BitrixAsync:
         operating_time_limit: int = 480,
         client: aiohttp.ClientSession = None,
         ssl: bool = True,
+        headers: dict = None,
     ):
         """
         Создает объект для запросов к Битрикс24.
@@ -79,12 +80,13 @@ class BitrixAsync:
             operating_time_limit=operating_time_limit,
             ssl=ssl,
             client=client,
+            headers=headers,
         )
         self.verbose = verbose
         self.batch_size = batch_size
 
     @log
-    async def get_all(self, method: str, params: dict = None) -> Union[list, dict]:
+    async def get_all(self, method: str, params: dict = None, headers: dict = None) -> Union[list, dict]:
         """
         Получить полный список сущностей по запросу `method`.
 
@@ -103,7 +105,7 @@ class BitrixAsync:
         согласно заданным методу и параметрам.
         """
 
-        return await self.srh.run_async(GetAllUserRequest(self, method, params).run())
+        return await self.srh.run_async(GetAllUserRequest(self, method, params, headers=headers).run())
 
     @log
     async def get_by_ID(
